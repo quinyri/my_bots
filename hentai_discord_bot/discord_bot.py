@@ -3,7 +3,7 @@ from disnake.ext import commands
 from url_parser import Parser
 
 bot = commands.Bot(command_prefix='!', intents=disnake.Intents.all())
-TOKEN = 'MTA5MzY2Mjg3NjE0MjY2NTg4MA.GDcKEG.STYf2o1V0JVGTpLRA5uPV7S-JY44AWrADhBnto'
+TOKEN = 'ur token'
 parser = Parser()
 
 

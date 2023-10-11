@@ -14,9 +14,7 @@ class Parser:
         '5': 'HentaiPetgirls'
     }
 
-
-    def store_urls(self, user_choice: str):
-
+    def store_urls(self, user_choice: str, user_id: int) -> None:
         headers = {'User-Agent': 'UUFyJFQzUZtOrqEPXD5opJ-R6RZEkw'}
 
         with sqlite3.connect('urls.db') as conn:
@@ -25,6 +23,7 @@ class Parser:
             cursor.execute('''
                 CREATE TABLE IF NOT EXISTS posts (
                     id INTEGER PRIMARY KEY,
+                    user_id INTEGER,
                     url TEXT
                 )
             ''')
@@ -40,35 +39,31 @@ class Parser:
                 if 'url' in post['data']:
                     url_to_insert = post['data']['url']
 
-                    cursor.execute('SELECT id FROM posts WHERE url = ?', (url_to_insert,))
+                    cursor.execute('SELECT id FROM posts WHERE url = ? AND user_id = ?', (url_to_insert, user_id))
                     existing_url = cursor.fetchone()
 
                     if existing_url is None:
-                        cursor.execute('INSERT INTO posts (url) VALUES (?)', (url_to_insert,))
+                        cursor.execute('INSERT INTO posts (user_id, url) VALUES (?, ?)', (user_id, url_to_insert))
                         conn.commit()
 
-
-    def retrieve_urls(self):
+    @staticmethod
+    def retrieve_urls(user_id: int) -> list:
         urls = []
         with sqlite3.connect('urls.db') as conn:
             cursor = conn.cursor()
-            cursor.execute('SELECT url FROM posts')
+
+            cursor.execute('SELECT url FROM posts WHERE user_id = ?', (user_id,))
             rows = cursor.fetchall()
-            for row in rows:
-                urls.append(row[0])
+            urls.extend([row[0] for row in rows])
+
         return urls
 
     @staticmethod
-    def clear_urls():
+    def clear_urls(user_id):
         with sqlite3.connect('urls.db') as conn:
             cursor = conn.cursor()
 
-            cursor.execute('DELETE FROM posts')
+            cursor.execute('DELETE FROM posts WHERE user_id = ?', (user_id,))
             conn.commit()
-
-
-
-
-
 
 

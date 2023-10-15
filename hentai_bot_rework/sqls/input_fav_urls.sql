@@ -1,0 +1,1 @@
+INSERT INTO FavUrls (user_id, url) VALUES (?, ?)

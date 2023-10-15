@@ -1,0 +1,1 @@
+INSERT OR IGNORE INTO Urls (user_id, url) VALUES (?, ?)

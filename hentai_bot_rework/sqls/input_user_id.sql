@@ -1,0 +1,1 @@
+INSERT INTO Users (user_id) VALUES (?)

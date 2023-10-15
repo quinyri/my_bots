@@ -1,0 +1,1 @@
+DELETE FROM Urls WHERE user_id = ? AND url = ?
